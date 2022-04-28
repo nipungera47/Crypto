@@ -127,7 +127,7 @@ export default function UserSidebar() {
 
               </span>
 
-              <div className={classes.watchlist}>
+              {/* <div className={classes.watchlist}>
                 <span style={{fontSize:15,textShadow:"0 0 5px black"}}>
                 watchList
                 </span>
@@ -142,7 +142,7 @@ export default function UserSidebar() {
                 );
               })}
 
-              </div>
+              </div> */}
 
 
               </div>
