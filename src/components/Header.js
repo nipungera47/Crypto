@@ -38,7 +38,7 @@ const darkTheme = createTheme({
 
 function Header() {
   const classes = useStyles();
-  const { currency, setCurrency,user } = CryptoState();
+  const { currency, setCurrency, user } = CryptoState();
 
   const history = useHistory();
 
@@ -52,7 +52,7 @@ function Header() {
               variant="h6"
               className={classes.title}
             >
-              Crypto Hunter
+              LiveLines
             </Typography>
             {/* <Button color="inherit">Login</Button> */}
             <Select
@@ -69,7 +69,6 @@ function Header() {
 
        {user?<UserSidebar/> : <AuthModel/>}
 
-        <Button>News</Button>
 
           </Toolbar>
         </Container> 
