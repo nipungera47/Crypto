@@ -15,6 +15,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { CryptoState } from "../CryptoContext";
 import AuthModel from "./Authentication/AuthModel";
+import UserSidebar from "./Authentication/UserSidebar"
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -37,7 +38,7 @@ const darkTheme = createTheme({
 
 function Header() {
   const classes = useStyles();
-  const { currency, setCurrency } = CryptoState();
+  const { currency, setCurrency,user } = CryptoState();
 
   const history = useHistory();
 
@@ -66,12 +67,12 @@ function Header() {
               <MenuItem value={"INR"}>INR</MenuItem>
             </Select>
 
-        <AuthModel/>
+       {user?<UserSidebar/> : <AuthModel/>}
 
         <Button>News</Button>
 
           </Toolbar>
-        </Container>
+        </Container> 
       </AppBar>
     </ThemeProvider>
   );

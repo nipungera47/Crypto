@@ -1,6 +1,10 @@
+// import { async } from '@firebase/util';
 import { Box, TextField ,Button} from '@material-ui/core';
 import React from 'react'
 import { useState } from 'react';
+import { CryptoState } from '../../CryptoContext';
+import { auth } from '../../firebase';
+import { createUserWithEmailAndPassword } from "@firebase/auth";
 
 const SignUp = ({handleClose}) => {
 
@@ -8,8 +12,49 @@ const SignUp = ({handleClose}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setconfirmPassword] = useState("");
+    const {setAlert} = CryptoState();
 
-    const handleSubmit =() =>{
+    const handleSubmit =async() =>{
+
+        if(password !== confirmPassword)
+        {
+            setAlert({
+                open:true,
+                message:"Password donot match",
+                type:"error",
+            });
+            return;
+        }
+
+
+        try {
+            const result = await createUserWithEmailAndPassword(
+                
+                auth,
+                email,
+                password 
+                
+                );
+
+                // console.log(result);
+
+                setAlert({
+                    open:true,
+                    message:`Sign up succesful . Welcome ${result.user.email}`,
+                    type:"success",
+                });
+
+                handleClose();
+            
+        } catch (error) {
+            setAlert({
+                open:true,
+                message:error.message,
+                type:"error",
+            });
+            return ;
+                
+        }
 
     }
     return (
@@ -49,7 +94,7 @@ const SignUp = ({handleClose}) => {
 
      style={{backgroundColor:"#2c48e8"}}       
     onClick={handleSubmit}
-     >Login</Button>
+     >Sign Up</Button>
 
 
     </Box>

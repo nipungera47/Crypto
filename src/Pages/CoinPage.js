@@ -1,4 +1,4 @@
-import { LinearProgress, makeStyles, Typography } from "@material-ui/core";
+import { LinearProgress, makeStyles, Typography , Button} from "@material-ui/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -7,12 +7,15 @@ import CoinInfo from "../components/CoinInfo";
 import { SingleCoin } from "../config/api";
 import { numberWithCommas } from "../components/CoinsTable";
 import { CryptoState } from "../CryptoContext";
+import { doc,setDoc } from "firebase/firestore/lite";
+import { db } from "../firebase";
+
 
 const CoinPage = () => {
   const { id } = useParams();
   const [coin, setCoin] = useState();
 
-  const { currency, symbol } = CryptoState();
+  const { currency, symbol,user,watchlist,setAlert } = CryptoState();
 
   const fetchCoin = async () => {
     const { data } = await axios.get(SingleCoin(id));
@@ -76,6 +79,57 @@ const CoinPage = () => {
     },
   }));
 
+const inWatchlist = watchlist.includes(coin?.id);
+
+  const addToWatchlist = async() => {
+    const coinRef  = doc(db,"watchlist",user.uid);
+
+      try{
+        await setDoc(coinRef,
+          {coins: watchlist?[...watchlist,coin?.id]:[coin?.id],
+          });
+          setAlert({
+            open:true,
+            message:`${coin.name} Added to watchlist !`,
+            type:"success",
+          });
+      }catch(error){
+
+        setAlert({
+          open:true,
+          message:error.message,
+          type:"error",
+        })
+
+      }
+
+
+  };
+  const Removefromwatchlist = async() =>{
+    const coinRef  = doc(db,"watchlist",user.uid);
+
+      try{
+        await setDoc(coinRef,
+          {coins: watchlist.filter((watch) => watch !== coin?.id),
+          },
+          {merge:"true"}
+          );
+          setAlert({
+            open:true,
+            message:`${coin.name} removed from watchlist !`,
+            type:"success",
+          });
+      }catch(error){
+
+        setAlert({
+          open:true,
+          message:error.message,
+          type:"error",
+        })
+
+      }
+
+  }
   const classes = useStyles();
 
   if (!coin) return <LinearProgress style={{ backgroundColor: "#2c48e8" }} />;
@@ -148,6 +202,22 @@ const CoinPage = () => {
               M
             </Typography>
           </span>
+
+          {user && (
+            <Button
+            variant= "outlined"
+            style = {{
+              width:"100%",
+              height:40,
+              backgroundColor:"#2c48e8"
+            }}
+            onClick={inWatchlist?Removefromwatchlist:addToWatchlist}
+            >
+            {inWatchlist?"Remove From Watchlist": "Add to WatchList"}
+            </Button>
+          )}
+
+
         </div>
       </div>
       <CoinInfo coin={coin} />
