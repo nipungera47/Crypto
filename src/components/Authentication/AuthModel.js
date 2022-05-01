@@ -118,7 +118,7 @@ export default function AuthModel() {
             {value === 0 && <Login handleClose = {handleClose}/>}
             {value ===1 && <SignUp  handleClose={handleClose} />}
 
-        <Box className={classes.google}>
+        {/* <Box className={classes.google}>
 
           <span> OR </span>
 
@@ -127,7 +127,7 @@ export default function AuthModel() {
               onClick={signInWithGoogle}
 
             />
-        </Box>
+        </Box> */}
 
           </div>
         </Fade>
